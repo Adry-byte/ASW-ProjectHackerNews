@@ -1,0 +1,54 @@
+<%= render "layout/header" %>
+
+<div class="content">
+  <p id="notice"><%= notice %></p>
+  <ol class="inline gap">
+    <h3>Comments</h3>
+
+    <% if @comments.empty? %>
+        <p>There are no comments yet</p>
+    <% else %>
+        <% @comments.reverse_order.each do |comment| %>
+            <div>
+              <small><%= link_to like_comment_path (comment), method: :put do %>
+                    ▲
+                <% end %> <a href="/users/<%= comment.user_id %>"> <%= getUser(comment.user_id).username %></a>
+                <%= time_ago_in_words(comment.created_at) %>
+                |<a href="/submissions/<%= comment.submission_id %>">
+                topic |
+              </a> <%= comment.get_upvotes.size%> votes
+              </small>
+            </div>
+            <div>
+              <div class="pad-comment">
+                <%= comment.content %>
+              </div>
+            </div>
+        <% end %>
+    <%end%>
+  </ol>
+
+  <ol class="inline gap">
+    <h3>Replies</h3>
+
+    <% if @replies.empty? %>
+        <p>There are no replies yet</p>
+    <% else %>
+        <% @replies.reverse_order.each do |reply| %>
+            <div>
+              <small><%= link_to like_reply_path (reply) do %>
+                    ▲
+                <% end %> <a href="/users/<%= reply.user_id %>"> <%= getUser(reply.user_id).username %></a>
+                <%= time_ago_in_words(reply.created_at) %>
+                </a> | <%= reply.get_upvotes.size%> votes
+              </small>
+            </div>
+            <div>
+              <div class="pad-comment">
+                <%= reply.content %>
+              </div>
+            </div>
+        <% end %>
+    <%end%>
+  </ol>
+</div>

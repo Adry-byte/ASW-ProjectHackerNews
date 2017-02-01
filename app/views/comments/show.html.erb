@@ -1,0 +1,32 @@
+<%= render "layout/header" %>
+<div class="content">
+  <div class="content">
+    <p id="notice"><%= notice %></p>
+
+    <div><small> <%= link_to like_comment_path (@comment), method: :put do %>
+          ▲
+      <% end %>
+      <a href="/users/<%= @comment.user_id %>"><%= getUser(@comment.user_id).username %></a> about <%= time_ago_in_words(@comment.created_at) %> | <%= @comment.get_upvotes.size%> votes</small> </div>
+
+    <%= @comment.content %>
+    <div><small>
+      <%= link_to 'Reply', @comment %></small></div>
+
+    <% for reply in @comment.replies %>
+        <div class="reply">
+          <div><small><%= link_to like_reply_path (reply) do %>
+                ▲
+            <% end %>
+            <a href="/users/<%= reply.user_id %>"><%= getUser(reply.user_id).username %> </a>about <%= time_ago_in_words(reply.created_at) %> | <%= reply.get_upvotes.size%> votes</small> </div>
+          <%= reply.content %>
+        </div>
+    <% end %>
+  </div>
+
+  <%= form_tag :action => "reply", :id => @comment %>
+  <textarea name="content" id="reply_content" rows="6" cols="60"></textarea></br>
+  <%= submit_tag "reply" %>
+  </form>
+
+</div>
+</div>

@@ -1,0 +1,558 @@
+# this is an example of the Uber API
+# as a demonstration of an API spec in YAML
+swagger: '2.0'
+info:
+  title: Hacker News API
+  description: API for ASW - FIB by Cristian Pinto Álvaro Martínez David García
+  version: "1.0.0"
+# the domain of the service
+host: guarded-hamlet-76765.herokuapp.com
+# array of all schemes that your API supports
+schemes:
+  - https
+# will be prefixed to all paths
+basePath: /api
+produces:
+  - application/json
+paths:
+  /users/:
+    post:
+      summary: Create user
+      description: Creates a user and returns its apiKey.
+      parameters:
+        - name: email
+          in: query
+          description: E-mail of the user
+          required: true
+          type: string
+          format: string
+        - name: username
+          in: query
+          description: Username of the user
+          required: true
+          type: string
+          format: string
+        - name: password
+          in: query
+          description: Password of the user
+          required: true
+          type: string
+          format: string
+      tags:
+        - Users
+      responses:
+        200:
+          description: The user it is created
+          schema:
+              $ref: '#/definitions/UserWithoutDetails'
+        404:
+          description: Error Not Found
+  /users/{id}:
+    get:
+      summary: User Details
+      description: Returns a user given its id.
+      parameters:
+        - name: id
+          in: path
+          description: Id of the user
+          required: true
+          type: number
+          format: number
+      tags:
+        - Users
+      responses:
+        200:
+          description: A user
+          schema:
+              $ref: '#/definitions/User'
+        404:
+          description: Error Not Found
+    put:
+      summary: Update User
+      description: Update an user given its id.
+      parameters:
+        - name: id
+          in: path
+          description: Id of the user
+          required: true
+          type: number
+          format: number
+        - name: about
+          in: query
+          description: about information of the user
+          required: false
+          type: string
+          format: string
+        - name: apiKey
+          in: query
+          description: apiKey of the user, showd correspond with the id
+          required: true
+          type: string
+          format: string
+      tags:
+        - Users
+      responses:
+        200:
+          description: A user
+          schema:
+              $ref: '#/definitions/User'
+        405:
+          description: Method not Allowed
+  /submissions:
+    get:
+      summary: All Submissions
+      description: |
+        Returns all submissions that are contains a URL
+      tags:
+        - Submissions
+      responses:
+        200:
+          description: An array of submissions
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Submission'
+    post:
+      summary: Create a Submission
+      description: Creates a new submission. If has param content, it will be an ask submission. Else it will by an url submission.
+      parameters:
+        - name: title
+          in: query
+          description: Title of the submission
+          required: true
+          type: string
+          format: string
+        - name: url
+          in: query
+          description: Url of the submission
+          required: false
+          type: string
+          format: string
+        - name: content
+          in: query
+          description: Content of the submission
+          required: false
+          type: string
+          format: string
+        - name: apiKey
+          in: query
+          description: apiKey of the author
+          required: true
+          type: string
+          format: string
+      tags:
+        - Submissions
+      responses:
+        200:
+          description: A submission
+          schema:
+              $ref: '#/definitions/Submission'
+        405:
+          description: Method not Allowed
+  /asks:
+    get:
+      summary: All Asks
+      description: |
+        Returns all asks that are contains content
+      tags:
+        - Submissions
+      responses:
+        200:
+          description: An array of submissions 
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Submission'
+  /submissions/{id}:
+    get:
+      summary: Submission Detail
+      description: Returns a submission given its id.
+      parameters:
+        - name: id
+          in: path
+          description: Id of the submission
+          required: true
+          type: number
+          format: number
+      tags:
+        - Submissions
+      responses:
+        200:
+          description: A submission
+          schema:
+              $ref: '#/definitions/Submission'
+        404:
+          description: Error Not Found
+    post:
+      summary: Add Comment to a Submission
+      description: Adds a comment to the given submission
+      parameters:
+        - name: id
+          in: path
+          description: Id of the submission parent
+          required: true
+          type: number
+          format: number
+        - name: content
+          in: query
+          description: Content of the comment
+          required: true
+          type: string
+          format: string
+        - name: apiKey
+          in: query
+          description: ApiKey of the author
+          required: true
+          type: string
+          format: string
+      tags:
+        - Comments
+      responses:
+        200:
+          description: A comment
+          schema:
+              $ref: '#/definitions/Comment'
+        405:
+          description: method not Allowed
+  /submissions/{id}/vote:
+    put:
+      summary: Vote a Submission
+      description: Votes a submission if it is the first time voted by the user
+      parameters:
+        - name: id
+          in: path
+          description: Id of the submission
+          required: true
+          type: number
+          format: number
+        - name: apiKey
+          in: query
+          description: Api key of the author of the vote
+          required: true
+          type: string
+          format: string
+      tags:
+        - Submissions
+      responses:
+        200:
+          description: A submission
+          schema:
+              $ref: '#/definitions/Submission'
+        405:
+          description: method not Allowed
+  /submissions/user/{id}:
+    get:
+      summary: Submissions
+      description: Returns all submission given its a author id.
+      parameters:
+        - name: id
+          in: path
+          description: Id of the author of submissions
+          required: true
+          type: number
+          format: number
+      tags:
+        - Submissions
+      responses:
+        200:
+          description: An array of submissions
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Submission'
+        404:
+          description: Error Not Found
+  /comments/{id}:
+    get:
+      summary: Comment Detail
+      description: Returns a comment given its id.
+      parameters:
+        - name: id
+          in: path
+          description: Id of the comment
+          required: true
+          type: number
+          format: number
+      tags:
+        - Comments
+      responses:
+        200:
+          description: A comment
+          schema:
+              $ref: '#/definitions/Comment'
+        404:
+          description: Error Not Found
+    post:
+      summary: Post Reply
+      description: Creates a new reply
+      parameters:
+        - name: id
+          in: path
+          description: Id of the comment
+          required: true
+          type: number
+          format: number
+        - name: content
+          in: query
+          description: Content of the comment
+          required: true
+          type: string
+          format: string
+        - name: apiKey
+          in: query
+          description: apiKey of the author
+          required: false
+          type: string
+          format: string
+      tags:
+        - Replies
+      responses:
+        200:
+          description: A comment
+          schema:
+              $ref: '#/definitions/Comment'
+        405:
+          description: Method not Allowed
+  /comments/user/{id}:
+    get:
+      summary: Comments
+      description: Returns all comments given its a author id.
+      parameters:
+        - name: id
+          in: path
+          description: Id of the author of comments
+          required: true
+          type: number
+          format: number
+      tags:
+        - Comments
+      responses:
+        200:
+          description: An array of comments
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Comment'
+        404:
+          description: Error Not Found
+  /comments/{id}/vote:
+    put:
+      summary: Vote a Comment
+      description: Votes a comment if it is the first time voted by the user
+      parameters:
+        - name: id
+          in: path
+          description: Id of the comment
+          required: true
+          type: number
+          format: number
+        - name: apiKey
+          in: query
+          description: Api key of the author of the vote
+          required: true
+          type: string
+          format: string
+      tags:
+        - Comments
+      responses:
+        200:
+          description: A comment
+          schema:
+              $ref: '#/definitions/Comment'
+        405:
+          description: method not Allowed
+  /replies/{id}:
+    get:
+      summary: Replies
+      description: Returns a reply given its id.
+      parameters:
+        - name: id
+          in: path
+          description: Id of the reply
+          required: true
+          type: number
+          format: number
+      tags:
+        - Replies
+      responses:
+        200:
+          description: A reply
+          schema:
+              $ref: '#/definitions/Reply'
+        404:
+          description: Error Not Found
+  /replies/user/{id}:
+    get:
+      summary: Replies
+      description: Returns all replies given its a author id.
+      parameters:
+        - name: id
+          in: path
+          description: Id of the author of replies
+          required: true
+          type: number
+          format: number
+      tags:
+        - Replies
+      responses:
+        200:
+          description: An array of replies
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Reply'
+        404:
+          description: Error Not Found
+  /replies/{id}/vote:
+    put:
+      summary: Vote a Reply
+      description: Votes a reply if it is the first time voted by the user
+      parameters:
+        - name: id
+          in: path
+          description: Id of the reply
+          required: true
+          type: number
+          format: number
+        - name: apiKey
+          in: query
+          description: Api key of the author of the reply
+          required: true
+          type: string
+          format: string
+      tags:
+        - Replies
+      responses:
+        200:
+          description: A Reply
+          schema:
+              $ref: '#/definitions/Reply'
+        405:
+          description: method not Allowed
+definitions:
+  Reply:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+        description: Unique identifier for the reply
+      content:
+        type: string
+        description: Message
+      comment_id:
+        type: integer
+        format: int32
+        description: Identifier of the target comment
+      nvotes:
+        type: integer
+        format: int32
+        description: Number of votes
+      author_id:
+        type: integer
+        format: int32
+        description: Identifier of the user owner
+      timestamp:
+        type: string
+        description: Datetime when the submission was created
+  Comment:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+        description: Unique identifier for the comment
+      content:
+        type: string
+        description: Message
+      submission_id:
+        type: integer
+        format: int32
+        description: Identifier of the target submission
+      nvotes:
+        type: integer
+        format: int32
+        description: Number of votes
+      author_id:
+        type: integer
+        format: int32
+        description: Identifier of the user owner
+      timestamp:
+        type: string
+        description: Datetime when the submission was created
+      replies:
+        type: array
+        items:
+          type: integer
+  User:
+    type: object
+    properties:
+      id:
+        type: number
+        format: int32
+        description: Unique identifier for the user
+      username:
+        type: string
+        description: Username of the user
+      email:
+        type: string
+        description: email of the user
+      about:
+        type: string
+        description: about
+      timestamp:
+        type: string
+        description: Datetime when the user was created
+        
+  UserWithoutDetails:
+      type: object
+      properties:
+        id:
+          type: number
+          format: int32
+          description: Unique identifier for the user
+        email:
+          type: string
+          description: email of the user
+        apiKey:
+          type: string
+          description: secret apiKey of the user
+
+  Submission:
+    type: object
+    properties:
+      id:
+        type: number
+        format: int32
+        description: Unique identifier for the submission
+      title:
+        type: string
+        description: Name of the submission
+      url:
+        type: string
+        description: adress to the new
+      content:
+        type: string
+        description: Message
+      tipo:
+        type: string
+        description: Type of submission
+      ncomments:
+        type: number
+        format: int32
+        description: Number of comments in the submission
+      nvotes:
+        type: number
+        format: int32
+        description: Number of votes
+      author_id:
+        type: number
+        format: int32
+        description: Identifier of the user owner
+      timestamp:
+        type: string
+        description: Datetime when the submission was created
+      comments:
+        type: array
+        items:
+          type: number

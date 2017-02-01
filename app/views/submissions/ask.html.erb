@@ -1,0 +1,47 @@
+<%= render "layout/header" %>
+
+<div class="content">
+
+  <p id="notice"><%= notice %></p>
+
+
+  <ol class="inline gap">
+    <% if @submissions.empty? %>
+        <p>There are no new submissions</p>
+    <% else %>
+
+        <% @submissions.reverse_order.each do |submission| %>
+            <% if submission.tipo == "text"%>
+                <li>
+                  <div class="url-link">
+                    <small><%= link_to like_submission_path(submission), method: :put do %>
+                          ▲
+                      <% end %>
+                    </small>
+                    <%= submission.title %>
+                  </div>
+                  <div>
+                    <small><%= link_to like_submission_path(submission), method: :put do %>
+                          <%= submission.get_upvotes.size%>
+                      <% end %>
+                      votes by  <a href="/users/<%= submission.user_id %>"><%= getUser(submission.user_id).username%></a>
+
+                      <%= time_ago_in_words(submission.created_at) %>
+                      |
+                      <a href="/submissions/<%= submission.id %>"><%= submission.comments.size %> comments</a>
+                      <% if submission.user_id == current_user() %>
+                          <%= link_to 'Edit', edit_submission_path(submission) %>
+                          |
+                          <%= link_to 'Destroy', submission, method: :delete, data: {confirm: 'Are you sure?'} %>
+                      <% end %>
+                    </small>
+
+                  </div>
+                </li>
+  <% else %>
+            <% end %>
+        <% end %>
+    <% end %>
+
+  </ol>
+</div>

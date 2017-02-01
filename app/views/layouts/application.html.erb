@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ASW News - A Hacker News Clone</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+  <link rel="icon"
+        type="image/png"
+        href="<%= image_path('asw.png') %>">
+
+</head>
+<body>
+<%= yield %>
+<%= debug(params) if Rails.env.development? %>
+
+</body>
+</html>

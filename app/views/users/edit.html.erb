@@ -1,0 +1,21 @@
+<%= render "layout/header" %>
+
+<div class="content">
+  <p id="notice"><%= notice %></p>
+
+  <p>
+    <strong>Username:</strong>
+    <%= @user.username %>
+  </p>
+
+
+  <%= render 'formShow' %>
+
+
+  <p>
+    <a href="/submissions?user_pk=<%= @user.id %>">Submissions</a>
+  </p>
+  <p>
+    <a href="/threads?user_pk=<%= @user.id %>">Comments</a>
+  </p>
+</div>

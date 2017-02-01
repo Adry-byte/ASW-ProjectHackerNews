@@ -1,0 +1,68 @@
+<%= render "layout/header" %>
+<div class="content">
+
+  <p id="notice"><%= notice %></p>
+  <div class="inline">
+    <small><%= link_to like_submission_path(@submission), method: :put do %>
+          ▲
+      <% end %>
+    </small>
+    <a href="<%= @submission.url %>"><%= @submission.title %> -
+      <small>(<%= @submission.url %>)</small>
+    </a>
+  </div>
+  <div>
+    <small><%= link_to like_submission_path(@submission), method: :put do %>
+          <%= @submission.get_upvotes.size%>
+      <% end %>
+      votes by <a href="/users/<%= @submission.user_id %>"><%= getUser(@submission.user_id).username%></a>
+
+      <%= time_ago_in_words(@submission.created_at) %>
+      |
+      <a href="/submissions/<%= @submission.id %>"><%= @submission.comments.size %> comments</a>
+      <% if @submission.user_id == current_user() %>
+          <%= link_to 'Edit', edit_submission_path(@submission) %>
+          |
+          <%= link_to 'Destroy', @submission, method: :delete, data: {confirm: 'Are you sure?'} %>
+      <% end %>
+    </small>
+  </div>
+
+  <p>
+    <strong>Comment:</strong>
+    <%= @submission.content %>
+  </p>
+
+
+  <%= form_tag :action => "comment", :id => @submission %>
+  <textarea name="content" id="comment_content" rows="6" cols="60"></textarea></br>
+  <%= submit_tag "add a comment" %>
+  </form>
+
+  <div style="margin-top: 10px;">
+    <% for comment in @submission.comments %>
+        <div> <small> <%= link_to like_comment_path (comment), method: :put do %>
+              ▲
+          <% end %>
+          <a href="/users/<%= comment.user_id %>"> <%= getUser(comment.user_id).username %></a> about <%= time_ago_in_words(comment.created_at) %> <%= comment.get_upvotes.size%> votes</small> </div>
+        <div class="pad-comment">
+          <%= comment.content %>
+        </div>
+        <div><small>
+          <div class="pad-comment">
+          <%= link_to 'Reply', comment %></small>
+        </div></div>
+
+        <% for reply in comment.replies %>
+            <div class="reply">
+              <div><small> <%= link_to like_reply_path (reply) do %>
+                    ▲
+                <% end %>
+                <%= getUser(reply.user_id).username %> about <%= time_ago_in_words(reply.created_at) %> | <%= reply.get_upvotes.size%> votes</small> </div>
+              <%= reply.content %>
+            </div>
+        <% end %>
+
+    <% end %>
+    </div>
+</div>

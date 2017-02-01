@@ -4,7 +4,7 @@ Proyecto de HackerNews de la asignatura de Aplicaciones y Servicios Web (ASW) de
 
 ## Heroku
 
-http://guarded-hamlet-76765.herokuapp.com/
+http://guarded-hamlet-76765.herokuapp.com
 
 ## Miembros del grupo
 
